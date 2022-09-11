@@ -28,13 +28,13 @@ window.onscroll = () =>{
 
 ///////////////////
 
- var swiper = new Swiper(".coaches-swiper", {
+ var coachesSwiper = new Swiper(".coaches-swiper", {
       effect: "coverflow",
       grabCursor: true,
       centeredSlides: true,
       slidesPerView: "auto",
       coverflowEffect: {
-        depth: 200,
+        depth: 0,
         modifier: 1,
         rotate: 0,
         scale: 1,
@@ -44,9 +44,9 @@ window.onscroll = () =>{
       pagination: {
         el: ".swiper-pagination",
       },
-    });
+});
 
-var swiper = new Swiper(".review-slider", {
+var reviewSwiper = new Swiper(".review-slider", {
     spaceBetween: 20,
     grabCursor: true,
     loop:true,
@@ -64,7 +64,7 @@ var swiper = new Swiper(".review-slider", {
     },
 });
 
-var swiper = new Swiper(".posts-slider", {
+var postsSwiper = new Swiper(".posts-slider", {
     spaceBetween: 20,
     grabCursor: true,
     loop:true,
