@@ -91,29 +91,32 @@ var postsSwiper = new Swiper(".posts-slider", {
 
 //////////////////////
 
-// Checkout Button
+// Stripe Checkout Button
 
 //////////////////////
 
 const button = document.querySelector("button")
-button.addEventListener("click", (req, res) => {
-    fetch('/create-checkout-session', {
+
+button.addEventListener("click", () => {
+    fetch('http://localhost:3000/create-checkout-session', {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'
         },
         body: JSON.stringify({
             items: [{ 
-                id: req.body.id, // 1
-                quantity: req.body.quantity, // 3
+                id: 1
             }]
-        })
-    }).then(res => {
+        }),
+    })
+    .then(res => {
         if (res.ok) return res.json()
         return res.json().then(json = Promise.reject(json))
-    }).then(({ url }) => {
+    })
+    .then(({ url }) => {
         window.location = url
-    }).catch( e => {
+    })
+    .catch( e => {
         console.error(e.error)
     })
 })

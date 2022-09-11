@@ -1,15 +1,15 @@
+require('dotenv').config('./config/.env')
+
 const express = require('express')
 const app = express()
 const cors = require('cors')
-
-require('dotenv').config('./config/.env')
 
 
 app.use(express.static('public'))
 app.use(express.json())
 
 app.use(cors({
-    origin: 'http://localhost:5500'
+    origin: 'http://localhost:5500/'
 }))
 
 //////////////////////////////
@@ -29,19 +29,23 @@ const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY)
 const storeItems = new Map([
     [1, {
         priceInCents: 30000, 
-        name: 'Athlete Circle - Installments'
+        name: 'Athlete Circle - Installments',
+        quantity: 1,
     }],
     [2, {
         priceInCents: 150000, 
-        name: 'Athlete Circle - One Time'
+        name: 'Athlete Circle - One Time',
+        quantity: 1,
     }],
     [3, {
         priceInCents: 80000, 
-        name: 'A3 Life Coaching Cert - Installments'
+        name: 'A3 Life Coaching Cert - Installments',
+        quantity: 1,
     }],
     [4, {
         priceInCents: 400000, 
-        name: 'A3 Life Coaching Cert - One Time'
+        name: 'A3 Life Coaching Cert - One Time',
+        quantity: 1,
     }],
 ])
 // Keep all information for items (price, name) on server in some location
@@ -60,8 +64,6 @@ const storeItems = new Map([
 app.post('/create-checkout-session', async (req, res) => {
     try {
         const session = await stripe.checkout.sessions.create({
-            success_url: `${process.env.PUBLIC_URL}/index.html`,
-            cancel_url: `${process.env.PUBLIC_URL}/index.html`,
             payment_method_types: ['card'],
             mode: 'payment',
             line_items: req.body.items.map(item => {
@@ -74,18 +76,18 @@ app.post('/create-checkout-session', async (req, res) => {
                         },
                         unit_amount: storeItem.priceInCents
                     },
-                    quantity: req.body.quantity, // item.quantity
+                    quantity: storeItem.quantity, 
                 }
-            })
+            }),
+            success_url: `${process.env.CLIENT_URL}/index.html`,
+            cancel_url: `${process.env.CLIENT_URL}/index.html`,
         })
-        res.json({ id: session.id })// url: session.url
+        res.json({ url: session.url })
     } catch (e) {
         res.status(500).json({ error: e.message })
     }
 })
 
-app.use('/', mainRoutes)
-
-app.listen(process.env.PORT, () => {
-    console.log('Server is up and running')
+app.listen(3000, () => {
+    console.log('Server is up and running on port 3000')
 })
